@@ -15,7 +15,22 @@ from unet3d.model import unet_model_3d
 from unet3d.training import load_old_model, train_model
 
 
+def fetch_training_data_files():
+    training_data_files = list()
+    for subject_dir in glob.glob(os.path.join(config["data_dir"], "*", "*")):
+        subject_files = list()
+        for modality in config["training_modalities"]:
+            subject_files.append(os.path.join(subject_dir, modality + ".nii.gz"))
+        training_data_files.append(tuple(subject_files))
+    return training_data_files
+
+
 def main(overwrite=False):
+    # convert input images into an hdf5 file
+    if overwrite or not os.path.exists(config["hdf5_file"]):
+        training_files = fetch_training_data_files()
+
+        write_data_to_file(training_files, config["hdf5_file"], image_shape=config["image_shape"])
     hdf5_file_opened = tables.open_file(config["hdf5_file"], "r")
 
     if not overwrite and os.path.exists(config["model_file"]):

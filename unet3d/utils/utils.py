@@ -23,13 +23,13 @@ def get_affine(in_file):
 
 def read_image_files(image_files, image_shape=None, crop=None, use_nearest_for_last_file=True):
     """
-    
-    :param image_files: 
-    :param image_shape: 
-    :param crop: 
+
+    :param image_files:
+    :param image_shape:
+    :param crop:
     :param use_nearest_for_last_file: If True, will use nearest neighbor interpolation for the last file. This is used
     because the last file may be the labels file. Using linear interpolation here would mess up the labels.
-    :return: 
+    :return:
     """
     image_list = list()
     for i, image_file in enumerate(image_files):
@@ -63,7 +63,7 @@ def resize(image, new_shape, interpolation="continuous"):
     input_shape = np.asarray(image.shape, dtype=np.float16)
     ras_image = reorder_img(image, resample=interpolation)
     output_shape = np.asarray(new_shape)
-    new_spacing = input_shape/output_shape
+    new_spacing = input_shape / output_shape
     new_affine = np.copy(ras_image.affine)
     new_affine[:3, :3] = ras_image.affine[:3, :3] * np.diag(new_spacing)
     return resample_img(ras_image, target_affine=new_affine, target_shape=output_shape, interpolation=interpolation)

@@ -1,16 +1,23 @@
+import os
+import sys
+
 import numpy as np
 from nilearn.image import new_img_like
+
+HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(HOME)
+sys.path.append(HOME)
 
 from unet3d.utils.utils import resize
 from .utils import crop_img, crop_img_to, read_image
 
 
-def find_downsized_info(training_data_files, input_shape):
+def find_downsized_info(training_data_files):
     foreground = get_complete_foreground(training_data_files)
     crop_slices = crop_img(foreground, return_slices=True, copy=True)
     cropped = crop_img_to(foreground, crop_slices, copy=True)
-    final_image = resize(cropped, new_shape=input_shape, interpolation="nearest")
-    return crop_slices, final_image.affine, final_image.header
+    # final_image = resize(cropped, new_shape=input_shape, interpolation="nearest")
+    return crop_slices, cropped.affine, cropped.header
 
 
 def get_complete_foreground(training_data_files):
@@ -56,4 +63,5 @@ def normalize_data_storage(data_storage):
         data_storage[index] = normalize_data(data_storage[index], mean, std)
     return data_storage
 
-
+if __name__ == '__main__':
+    find_downsized_info()
