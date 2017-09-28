@@ -4,7 +4,7 @@ from random import shuffle
 import numpy as np
 
 from utils import pickle_dump, pickle_load
-from augment import augment_data
+from .augment import augment_data
 from brats.config import config
 
 np.random.seed(config['random_seed'])

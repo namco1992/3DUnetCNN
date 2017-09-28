@@ -1,4 +1,3 @@
-import numpy as np
 from keras import backend as K
 from keras.models import Model, load_model
 from keras.layers import Input, Lambda, Dense, Flatten, Reshape, Highway, Activation, Dropout
@@ -8,7 +7,6 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.noise import GaussianDropout
 from keras.optimizers import Adamax, Adam, Nadam
 from keras.layers.advanced_activations import PReLU, LeakyReLU
-from sklearn.preprocessing import LabelBinarizer
 from keras.regularizers import l2
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, LearningRateScheduler
 from keras.layers.merge import concatenate
@@ -37,7 +35,7 @@ def dense_branch(xstart, name, outsize=1, activation='sigmoid'):
     return xout
 
 
-def build_model(input_shape):
+def build_model(input_shape, initial_learning_rate):
 
     xin = Input(input_shape)
 
@@ -67,8 +65,7 @@ def build_model(input_shape):
     xout_malig = dense_branch(xpool, name='o_mal', outsize=1, activation='sigmoid')
 
     model = Model(input=xin, output=xout_malig)
-    lr_start = 1e-4
-    opt = Nadam(lr_start, clipvalue=1.0)
+    opt = Nadam(initial_learning_rate, clipvalue=1.0)
 
     model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
     print(model.summary())

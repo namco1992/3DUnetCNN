@@ -13,6 +13,8 @@
 # data input and output folder
 output/
 data/
+Graph2/
+brats_backup/
 
 # Python related
 # Byte-compiled / optimized / DLL files
