@@ -14,7 +14,7 @@ from keras.layers.merge import concatenate
 
 def conv_block(x_input, num_filters, pool=True, norm=False, drop_rate=0.0):
 
-    x1 = Conv3D(num_filters, (3, 3, 3), border_mode='same', W_regularizer=l2(1e-4))(x_input)
+    x1 = Conv3D(num_filters, (3, 3, 3), padding='same', kernel_regularizer=l2(1e-4))(x_input)
     x1 = PReLU()(x1)
     if norm:
         x1 = BatchNormalization()(x1)
@@ -27,15 +27,15 @@ def conv_block(x_input, num_filters, pool=True, norm=False, drop_rate=0.0):
 
 
 def dense_branch(xstart, name, outsize=1, activation='sigmoid'):
-    xdense_ = Dense(32, W_regularizer=l2(1e-4))(xstart)
+    xdense_ = Dense(32, kernel_regularizer=l2(1e-4))(xstart)
     xdense_ = BatchNormalization()(xdense_)
     # xdense_ = GaussianDropout(0)(xdense_)
     # xdense_ = PReLU()(xdense_)
-    xout = Dense(outsize, activation=activation, name=name, W_regularizer=l2(1e-4))(xdense_)
+    xout = Dense(outsize, activation=activation, name=name, kernel_regularizer=l2(1e-4))(xdense_)
     return xout
 
 
-def build_model(input_shape, initial_learning_rate):
+def build_model(input_shape, initial_learning_rate, weights=None):
 
     xin = Input(input_shape)
 
@@ -64,11 +64,14 @@ def build_model(input_shape, initial_learning_rate):
 
     xout_malig = dense_branch(xpool, name='o_mal', outsize=1, activation='sigmoid')
 
-    model = Model(input=xin, output=xout_malig)
+    model = Model(inputs=xin, outputs=xout_malig)
     opt = Nadam(initial_learning_rate, clipvalue=1.0)
 
     model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
     print(model.summary())
+
+    if weights is not None:
+        model.load_weights(weights)
     return model
 
 
@@ -129,4 +132,4 @@ def build_model(input_shape, initial_learning_rate):
 #     return model
 
 if __name__ == '__main__':
-    build_model((144, 144, 144, 4))
+    build_model((144, 144, 144, 4), 1e-4)
