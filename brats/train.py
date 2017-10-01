@@ -37,8 +37,7 @@ def main(overwrite=False):
 
             # get training and testing generators
             train_generator, validation_generator, nb_train_samples, nb_test_samples = get_training_and_validation_generators(
-                hdf5_file_opened, batch_size=config["batch_size"], data_split=config["validation_split"], overwrite=overwrite,
-                train_index=train_index, valid_index=valid_index)
+                hdf5_file_opened, batch_size=config["batch_size"], train_index=train_index, valid_index=valid_index)
 
             # run training
             train_model(model=m, model_file=weight_path, training_generator=train_generator,
