@@ -4,7 +4,7 @@ import smtplib
 import traceback
 from email.mime.text import MIMEText
 
-from config import MailSettings as MS
+from .config import MailSettings as MS
 
 
 def pickle_dump(item, out_file):
