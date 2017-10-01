@@ -4,7 +4,7 @@ import math
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, CSVLogger, Callback, ReduceLROnPlateau, TensorBoard, EarlyStopping
 
-from utils import pickle_dump
+from utils import pickle_dump, send_mail
 # from model_3d import dice_coef, dice_coef_loss
 
 K.set_image_dim_ordering('tf')
@@ -13,6 +13,12 @@ K.set_image_dim_ordering('tf')
 # learning rate schedule
 def step_decay(epoch, initial_lrate, drop, epochs_drop):
     return initial_lrate * math.pow(drop, math.floor((1 + epoch) / float(epochs_drop)))
+
+
+class SendNotification(Callback):
+
+    def on_train_end(self, batch, logs={}):
+        send_mail()
 
 
 class SaveLossHistory(Callback):
@@ -37,7 +43,8 @@ def get_callbacks(model_file, initial_learning_rate, learning_rate_drop, learnin
         TensorBoard(log_dir='./Graph2', histogram_freq=0, write_graph=True, write_images=True),
         EarlyStopping(monitor='val_loss', patience=5, verbose=0),
         ModelCheckpoint(
-            model_file, monitor='val_loss', save_best_only=True, save_weights_only=True, verbose=0)]
+            model_file, monitor='val_loss', save_best_only=True, save_weights_only=True, verbose=0),
+        SendNotification()]
 
     return callbacks
 
