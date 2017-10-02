@@ -10,7 +10,7 @@ from brats.config import config
 np.random.seed(config['random_seed'])
 
 
-def get_training_and_validation_generators(data_file, batch_size, train_index, valid_index, augment=True,
+def get_training_and_validation_generators(data_file, batch_size, train_index, valid_index, augment=False,
                                            augment_flip=True, augment_distortion_factor=0.25):
     """
     Creates the training and validation generators that can be used when training the model.
@@ -65,7 +65,7 @@ def split_list(input_list, split=0.8, shuffle_list=True):
     return training, testing
 
 
-def data_generator(data_file, index_list, batch_size=1, augment=True, augment_flip=True,
+def data_generator(data_file, index_list, batch_size=1, augment=False, augment_flip=True,
                    augment_distortion_factor=0.25):
     while True:
         x_list = list()
@@ -80,7 +80,7 @@ def data_generator(data_file, index_list, batch_size=1, augment=True, augment_fl
                 y_list = list()
 
 
-def add_data(x_list, y_list, data_file, index, augment=True, augment_flip=True,
+def add_data(x_list, y_list, data_file, index, augment=False, augment_flip=True,
              augment_distortion_factor=0.25):
     """
     Adds data from the data file to the given lists of feature and target data
