@@ -1,5 +1,6 @@
 import os
 import math
+import time
 
 from keras import backend as K
 from keras.callbacks import ModelCheckpoint, CSVLogger, Callback, ReduceLROnPlateau, TensorBoard, EarlyStopping
@@ -33,7 +34,7 @@ class SaveLossHistory(Callback):
 def get_callbacks(model_file, initial_learning_rate, learning_rate_drop, learning_rate_epochs, logging_dir="."):
     callbacks = [
         # ModelCheckpoint(model_file, save_best_only=True),
-        CSVLogger(os.path.join(logging_dir, "training.log")),
+        CSVLogger(os.path.join(logging_dir, "training_{}.log".format(int(time.time())))),
         SaveLossHistory(),
         # LearningRateScheduler(partial(step_decay,
         #                       initial_lrate=initial_learning_rate,

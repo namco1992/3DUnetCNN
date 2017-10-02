@@ -1,15 +1,8 @@
-import os
-import sys
-
 import nibabel as nib
 import numpy as np
 from nilearn.image import reorder_img, resample_img, new_img_like
 from nilearn.image.image import check_niimg
 from nilearn.image.image import _crop_img_to as crop_img_to
-
-HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(HOME)
-sys.path.append(HOME)
 
 
 def crop_img(img, rtol=1e-8, copy=True, return_slices=False):

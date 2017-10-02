@@ -4,10 +4,6 @@ import sys
 import numpy as np
 from nilearn.image import new_img_like
 
-HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(HOME)
-sys.path.append(HOME)
-
 from config import config
 from utils import crop_img, crop_img_to, read_image
 

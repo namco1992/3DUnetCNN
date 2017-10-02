@@ -24,15 +24,16 @@ def main(overwrite=False):
         kf = KFold(nb_samples, n_folds=config['n_folds'], shuffle=True, random_state=config['random_seed'])
         for train_index, valid_index in kf:
             num_fold += 1
-            logging.info('Start KFold number {} from {}'.format(num_fold, config['n_folds']))
+            print('Start KFold number {} from {}'.format(num_fold, config['n_folds']))
+            print('Train len: {} Valid len: {}'.format(len(train_index), len(valid_index)))
             weight_path = config['model_file'].format(num_fold)
             if not overwrite and os.path.exists(weight_path):
-                logging.info("Loading pretrained model from: {}".format(weight_path))
+                print("Loading pretrained model from: {}".format(weight_path))
                 m = build_model(
                     input_shape=config["input_shape"], initial_learning_rate=config["initial_learning_rate"], weights=weight_path)
             else:
                 # instantiate new model
-                logging.info("Train a new model...")
+                print("Train a new model...")
                 m = build_model(input_shape=config["input_shape"], initial_learning_rate=config["initial_learning_rate"])
 
             # get training and testing generators

@@ -31,9 +31,9 @@ def send_mail():
         s.login(MS.MAIL_USER, MS.MAIL_PASS)
         s.sendmail(me, MS.MAILTO_LIST, msg.as_string())
         s.close()
-        logging.info('Then notification email has been sent.')
+        print('Then notification email has been sent.')
     except Exception as e:
-        logging.warn(traceback.format_exc())
+        print(traceback.format_exc())
 
 
 if __name__ == '__main__':
