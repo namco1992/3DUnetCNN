@@ -21,9 +21,9 @@ def predict(model, x, batch_size=8, verbose=2):
 
 
 def evaluate(y_true, y_pred):
+    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred).flatten()
     print("Truth: {}".format(y_true))
     print("Prediction: {}".format(y_pred))
-    y_true, y_pred = np.asarray(y_true), np.asarray(y_pred)
     result = (y_pred == y_true)
     acc = np.count_nonzero(result) / y_true.size
     print("acc: {}".format(acc))
@@ -78,17 +78,20 @@ def get_random_dataset(data_file, size, output_file, index_file=None):
     for index in index_list:
         add_data(x_list, y_list, data_file, index)
     pickle_dump(index_list, output_file)
-    return x_list, y_list
+    return np.asarray(x_list), np.asarray(y_list)
 
 
 def main():
     with tables.open_file(config["hdf5_file"], "r") as hdf5_file_opened:
-        x, y_true = get_random_dataset(hdf5_file_opened, 50, './evaluate_index.pkl')
-        weight_path = config['model_file'].format(1)
+        x, y_true = get_random_dataset(hdf5_file_opened, 50, './evaluate_index.pkl', './evaluate_index.pkl')
+        print(x.shape)
+        weight_path = config['model_file'].format(11)
         print('Load weights from {}'.format(weight_path))
         m = build_model(
             input_shape=config["input_shape"], initial_learning_rate=config["initial_learning_rate"], weights=weight_path)
         y_pred = predict(m, x)
+        y_pred[y_pred < 0.5] = 0
+        y_pred[y_pred >= 0.5] = 1
         evaluate(y_true, y_pred)
 
 
