@@ -9,6 +9,7 @@
 *.hdf5
 *.h5
 *.json
+*.csv
 
 # data input and output folder
 output/
